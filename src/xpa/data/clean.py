@@ -58,9 +58,9 @@ def _check_raw(df: pd.DataFrame) -> None:
     missing = [c for c in COLUMNS if c not in df.columns]
     if missing:
         raise SchemaError(f"missing columns: {missing}")
-    nulls = df[list(COLUMNS)].isna().sum()
-    if nulls.any():
-        raise SchemaError(f"null values: {nulls[nulls > 0].to_dict()}")
+    nulls = {c: int(n) for c, n in df[list(COLUMNS)].isna().sum().items() if n}
+    if nulls:
+        raise SchemaError(f"null values: {nulls}")
     for col, allowed in CATEGORIES.items():
         bad = set(df[col].unique()) - set(allowed)
         if bad:
@@ -93,13 +93,13 @@ def clean(raw: pd.DataFrame) -> pd.DataFrame:
             "newbie": raw["newbie"].astype(bool),
             "channel": pd.Categorical(raw["channel"], categories=CHANNELS),
             "segment": pd.Categorical(raw["segment"], categories=tuple(SEGMENT_TO_ARM)),
-            "arm": pd.Categorical(raw["segment"].map(SEGMENT_TO_ARM), categories=ARMS),
+            "arm": pd.Categorical(raw["segment"].map(SEGMENT_TO_ARM.get), categories=ARMS),
             "visit": raw["visit"].astype("int8"),
             "conversion": raw["conversion"].astype("int8"),
             "spend": raw["spend"].astype("float64"),
         }
     )
-    if df["arm"].isna().any():
+    if bool(df["arm"].isna().any()):
         raise SchemaError("arm could not be derived for some rows")
     return df
 
@@ -109,4 +109,4 @@ def build_silver(raw_dir: Path, processed_dir: Path) -> dict[str, int]:
     df = clean(pd.read_csv(raw_dir / CSV_NAME))
     processed_dir.mkdir(parents=True, exist_ok=True)
     df.to_parquet(processed_dir / SILVER_NAME, index=False)
-    return {arm: int(n) for arm, n in df["arm"].value_counts(sort=False).items()}
+    return {str(arm): int(n) for arm, n in df["arm"].value_counts(sort=False).items()}
