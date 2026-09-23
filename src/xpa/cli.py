@@ -1,6 +1,8 @@
 import typer
 
 from xpa import __version__
+from xpa.config import Settings
+from xpa.data.download import download
 
 app = typer.Typer(help="Hillstrom e-mail experiment analysis.", no_args_is_help=True)
 
@@ -18,3 +20,14 @@ def main(
     ),
 ) -> None:
     """Hillstrom e-mail experiment analysis."""
+
+
+@app.command("download")
+def download_cmd() -> None:
+    """Fetch the Hillstrom CSV into data/raw/ and write MANIFEST.json."""
+    settings = Settings()
+    manifest = download(settings.raw_dir)
+    typer.echo(f"source:  {manifest['source_name']}")
+    typer.echo(f"sha256:  {manifest['sha256']}")
+    typer.echo(f"n_rows:  {manifest['n_rows']}")
+    typer.echo(f"written: {settings.raw_dir}")
