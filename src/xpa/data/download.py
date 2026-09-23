@@ -83,7 +83,7 @@ def download(raw_dir: Path, sources: list[Source] | None = None, timeout: float 
         tmp = raw_dir / f"{CSV_NAME}.part"
         tmp.write_bytes(data)
         tmp.replace(raw_dir / CSV_NAME)
-        (raw_dir / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n")
+        (raw_dir / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", newline="\n")
         return manifest
 
     detail = "; ".join(f"{name}: {why}" for name, why in failures.items())

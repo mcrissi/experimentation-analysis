@@ -28,3 +28,21 @@ def test_version_flag():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
     assert __version__ in result.output
+
+
+def test_clean_command_reports_arm_sizes_only(monkeypatch, tmp_path):
+    calls = {}
+
+    def fake_build_silver(raw_dir, processed_dir):
+        calls["dirs"] = (raw_dir, processed_dir)
+        return {"control": 3, "mens": 3, "womens": 3}
+
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("xpa.cli.build_silver", fake_build_silver)
+
+    result = runner.invoke(app, ["clean"])
+
+    assert result.exit_code == 0, result.output
+    assert calls["dirs"] == (tmp_path / "raw", tmp_path / "processed")
+    for arm in ("control", "mens", "womens"):
+        assert arm in result.output

@@ -88,3 +88,9 @@ def test_default_sources_pin_a_sha256_each():
         assert len(s.sha256) == 64
         int(s.sha256, 16)
     assert Path(SOURCES[0].url).name.endswith(".csv")
+
+
+def test_manifest_uses_lf_line_endings(server, tmp_path):
+    raw = tmp_path / "raw"
+    download(raw, sources=[Source("primary", f"{server}/data.csv", sha(CSV))])
+    assert b"\r" not in (raw / "MANIFEST.json").read_bytes()
