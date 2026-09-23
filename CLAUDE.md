@@ -5,7 +5,7 @@ Analyze the Hillstrom MineThatData e-mail experiment end to end: health checks, 
 The contract is `docs/SPEC.md`. Read it at the start of every session, together with the top entry of `docs/HANDOFF.md`.
 
 ## Current phase
-Phase 0 — Scaffold. Gate: CI green (ubuntu + windows); `uv run xpa download` writes `data/raw/hillstrom.csv` and `data/raw/MANIFEST.json` with a sha256; `uv run pytest` passes offline.
+Phase 0 — Scaffold: **gate passed 2026-09-23** (PR #1). Next: Phase 1 — Health checks (awaiting kickoff). Gate: SRM p-value and SMD table in `reports/results/health.json`; any imbalance explained.
 (Update this section when a phase gate passes.)
 
 ## Commands
