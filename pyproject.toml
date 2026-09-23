@@ -1,29 +1,26 @@
 [project]
-name = "{{REPO_NAME}}"
+name = "experimentation-analysis"
 version = "0.1.0"
-description = "{{ONE_LINE_PURPOSE}}"
+description = "End-to-end A/B test analysis of the Hillstrom e-mail experiment: SRM checks, CUPED, power, sequential testing, heterogeneous effects."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
-authors = [{ name = "{{AUTHOR_NAME}}" }]
+authors = [{ name = "Matheus Rissi" }]
 dependencies = [
   "numpy",
-  "pandas",            # or polars; pick one per repo
+  "pandas",
   "scipy",
+  "statsmodels",
   "pyarrow",
   "duckdb",
   "matplotlib",
   "pydantic-settings",
   "typer",
-  # project-specific, e.g.:
-  # P1: "statsmodels", "scikit-uplift"
-  # P2: "scikit-learn", "datasets", "transformers", "typesafe-sdk", "anthropic"
-  # P3: "python-bcb", "fredapi", "statsmodels", "scikit-learn", "lightgbm"
-  # P4: "pymupdf", "sentence-transformers", "lancedb", "rank-bm25", "fastapi", "uvicorn", "streamlit", "typesafe-sdk", "anthropic"
+  "scikit-uplift",
 ]
 
 [project.scripts]
-{{CLI}} = "{{PKG}}.cli:app"
+xpa = "xpa.cli:app"
 
 [dependency-groups]
 dev = ["pytest", "pytest-cov", "ruff", "pyright", "jupyterlab", "ipykernel"]
@@ -33,7 +30,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/{{PKG}}"]
+packages = ["src/xpa"]
 
 [tool.ruff]
 line-length = 100
