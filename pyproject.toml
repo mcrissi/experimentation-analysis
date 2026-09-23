@@ -1,0 +1,51 @@
+[project]
+name = "{{REPO_NAME}}"
+version = "0.1.0"
+description = "{{ONE_LINE_PURPOSE}}"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "{{AUTHOR_NAME}}" }]
+dependencies = [
+  "numpy",
+  "pandas",            # or polars; pick one per repo
+  "scipy",
+  "pyarrow",
+  "duckdb",
+  "matplotlib",
+  "pydantic-settings",
+  "typer",
+  # project-specific, e.g.:
+  # P1: "statsmodels", "scikit-uplift"
+  # P2: "scikit-learn", "datasets", "transformers", "typesafe-sdk", "anthropic"
+  # P3: "python-bcb", "fredapi", "statsmodels", "scikit-learn", "lightgbm"
+  # P4: "pymupdf", "sentence-transformers", "lancedb", "rank-bm25", "fastapi", "uvicorn", "streamlit", "typesafe-sdk", "anthropic"
+]
+
+[project.scripts]
+{{CLI}} = "{{PKG}}.cli:app"
+
+[dependency-groups]
+dev = ["pytest", "pytest-cov", "ruff", "pyright", "jupyterlab", "ipykernel"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{PKG}}"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM", "RUF"]
+
+[tool.pyright]
+include = ["src"]
+typeCheckingMode = "basic"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
